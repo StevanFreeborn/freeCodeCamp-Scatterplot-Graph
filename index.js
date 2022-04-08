@@ -18,8 +18,9 @@ document.addEventListener("DOMContentLoaded", function(){
 
         // Find domain for x-axis
         const years = data.map(d => d.Year);
-        const minYear = d3.min(years);
+        const minYear = d3.min(years) - 1;
         const maxYear = d3.max(years) + 1;
+        console.log(maxYear - minYear);
 
         // Create x-axis scale
         const xScale = d3.scaleLinear()
@@ -29,16 +30,42 @@ document.addEventListener("DOMContentLoaded", function(){
         // Create x-axis
         const xAxis = d3.axisBottom()
         .scale(xScale)
-        .tickFormat(d => d.toString());
+        .tickFormat(d => d.toString())
+        .ticks(12)
+        .tickSizeOuter(0);
 
         svg.append("g")
         .call(xAxis)
         .attr("id", "x-axis")
         .attr("transform", "translate(50,450)");
 
-        // TODO: Find domain for y-axis
-        // TODO: Create y-axis scale
-        // TODO: Create y-axis
+        // parse times into mins and seconds
+        // create new date object for each time
+        // using parsed minutes and seconds.
+        const times = data.map(d => {
+            let time = d.Time.split(":");
+            return new Date(0, 0, 0, 0, time[0], time[1]);
+        });
+        console.log(times);
+        
+        const minTime = d3.min(times);
+        let maxTime = new Date(d3.max(times));
+        maxTime.setSeconds(maxTime.getSeconds() + 10);
 
+        // Create y-axis scale
+        const yScale = d3.scaleTime()
+        .domain([minTime, maxTime])
+        .range([height, 0]);
+
+        // Create y-axis
+        const yAxis = d3.axisLeft()
+        .scale(yScale)
+        .tickFormat(d3.timeFormat("%M:%S"))
+        .tickSizeOuter(0);
+
+        svg.append("g")
+        .call(yAxis)
+        .attr("id", "y-axis")
+        .attr("transform", "translate(50, 50)");
     }
 })
