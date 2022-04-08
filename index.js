@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function(){
         svg.append("g")
         .call(xAxis)
         .attr("id", "x-axis")
-        .attr("transform", "translate(50,400)");
+        .attr("transform", "translate(50,450)");
 
         // TODO: Find domain for y-axis
         // TODO: Create y-axis scale
