@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function(){
         const years = data.map(d => d.Year);
         const minYear = d3.min(years) - 1;
         const maxYear = d3.max(years) + 1;
-        console.log(maxYear - minYear);
 
         // Create x-axis scale
         const xScale = d3.scaleLinear()
@@ -46,11 +45,9 @@ document.addEventListener("DOMContentLoaded", function(){
             let time = d.Time.split(":");
             return new Date(0, 0, 0, 0, time[0], time[1]);
         });
-        console.log(times);
         
-        const minTime = d3.min(times);
-        let maxTime = new Date(d3.max(times));
-        maxTime.setSeconds(maxTime.getSeconds() + 10);
+        const minTime = new Date(0, 0, 0, 0, 36, 30);
+        const maxTime = new Date(0, 0, 0, 0, 40, 0);
 
         // Create y-axis scale
         const yScale = d3.scaleTime()
@@ -67,5 +64,22 @@ document.addEventListener("DOMContentLoaded", function(){
         .call(yAxis)
         .attr("id", "y-axis")
         .attr("transform", "translate(50, 50)");
+
+        // plot points
+        svg.selectAll(".dot")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("r", 6)
+        .attr("cx", (d,i) => xScale(years[i]) + 50)
+        .attr("cy", (d,i) => yScale(times[i]) + 50)
+        .attr("class", "dot")
+        .attr("data-xvalue", (d,i) => years[i])
+        .attr("data-yvalue", (d,i) => times[i]);
+        
+        // TODO: Add tool tip
+        
+        // TODO: Add Legend
+
     }
 })
